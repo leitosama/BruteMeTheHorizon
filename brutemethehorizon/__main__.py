@@ -45,7 +45,7 @@ if __name__ == "__main__":
         print("You must define password or passfile to brute", file=sys.stderr)
         sys.exit(2)
 
-    if args.userfile and not Path(args.userlist).is_file():
+    if args.userfile and not Path(args.userfile).is_file():
         parser.print_help()
         print(f"Userfile {args.userfile} doesn't exist", file=sys.stderr)
         sys.exit(2)
@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
     kerberos, domain = helper.check(args.url)
     print(f"[{Colors.green}+{Colors.reset}] {kerberos}")
-    print(f"[{Colors.yellow}+{Colors.reset}] {domain}")
+    print(f"[{Colors.green}+{Colors.reset}] {domain}")
 
     if not args.domain:
         args.domain = domain
