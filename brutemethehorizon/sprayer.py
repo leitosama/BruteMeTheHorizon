@@ -41,7 +41,7 @@ def spray(url: str, username: str, password: str, domain: str) -> Optional[dict]
             print(f"[{Colors.red}BAD_PASSWORD{Colors.reset}] {username}:{password}")
             return {}
         elif error_msg == helper.disabled_msg:
-            logger.critical(f'[{Colors.red}DISABLED{Colors.reset}] {username}', end="\n\n")
+            print(f'[{Colors.red}DISABLED{Colors.reset}] {username}', end="\n\n")
             return {username: "DISABLED"}
         elif error_msg == helper.locked_msg:
             logger.error("Locked account detected. Sleep 5 min.")
