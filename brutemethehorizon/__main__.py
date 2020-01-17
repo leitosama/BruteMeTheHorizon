@@ -5,7 +5,7 @@ import time
 from pathlib import Path
 
 from brutemethehorizon import helper, sprayer
-from brutemethehorizon.config import Colors
+from brutemethehorizon.config import Colors, Config
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -75,6 +75,7 @@ if __name__ == "__main__":
     logger.addHandler(ch)
 
     kerberos, domain = helper.check(args.url)
+    logger.info(f"URL: {args.url}")
     print(f"[{Colors.green}+{Colors.reset}] {kerberos}")
     print(f"[{Colors.green}+{Colors.reset}] {domain}")
 
@@ -86,6 +87,15 @@ if __name__ == "__main__":
     passlist = helper.get_list_from_file(
         args.passfile) if args.passfile else args.password.split(',')
 
+    logger.debug(f"Lock time: {args.lock_time}")
+    logger.debug(f"Passwords per spray: {args.count}")
+    logger.debug(f"Debug: {args.debug}")
+
+    logger.debug(f"Sleep time: {Config.sleep_time} mins.")
+
+    result_file = Path(args.output_dir) / Path(f"{args.output_prefix}_result.txt")
+    logger.info(f"Result file: {result_file}")
+
     logger.info(f"Userlist contains {len(userlist)} entries")
     logger.info(f"Passlist contains {len(passlist)} entries")
 
@@ -96,8 +106,8 @@ if __name__ == "__main__":
                              password_chunk, args.domain)
         if result is None:
             exit(1)
-        helper.write_data(result, Path(args.output_dir) / Path(f"{args.output_prefix}_result.txt"))
+        helper.write_data(result, result_file)
         t = time.time() - t
         logger.info(f"Spray time: {int(t // 60)} min, {int(t % 60)} sec")
         if not helper.check_last_chunk(password_chunk, passlist):
-            helper.timer(args.lockout - int(t // 60), "[*] Next spray in:")
+            helper.timer(args.lock_time - int(t // 60), "[*] Next spray in:")

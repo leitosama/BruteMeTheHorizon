@@ -26,6 +26,7 @@ def run(url: str, userlist: list, passlist: list, domain: str) -> Optional[dict]
 def spray(url: str, username: str, password: str, domain: str) -> Optional[dict]:
     try:
         error_msg = helper.auth(url, username, password, domain)
+        logger.debug(f"{username}:{password} - {error_msg}")
         if error_msg is None:
             print(
                 f"[{Colors.green}VALID{Colors.reset}] {username}:{password}", end='\n\n')
@@ -44,7 +45,7 @@ def spray(url: str, username: str, password: str, domain: str) -> Optional[dict]
             print(f'[{Colors.red}DISABLED{Colors.reset}] {username}', end="\n\n")
             return {username: "DISABLED"}
         elif error_msg == helper.locked_msg:
-            logger.error("Locked account detected. Sleep 5 min.")
+            logger.error(f"Locked account detected. Sleep {Config.sleep_time} min.")
             helper.timer(Config.sleep_time, "[*] Time to continue:")
             return {}
         else:
